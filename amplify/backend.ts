@@ -8,7 +8,7 @@ const backend = defineBackend({
   data,
 });
 
-// 1. Add the Bedrock HTTP Data Source
+// 1. Add the Bedrock connection
 backend.data.addHttpDataSource(
   'BedrockKB',
   'https://bedrock-runtime.eu-west-1.amazonaws.com',
@@ -20,13 +20,12 @@ backend.data.addHttpDataSource(
   }
 );
 
-// 2. Correctly grant permission to the Backend Role
-// We access the role from the generated L3 construct
+// 2. Grant permission using your exact Bedrock ARN
 const backendRole = backend.data.resources.graphqlApi.apiRole;
 
 backendRole.addToPrincipalPolicy(
   new PolicyStatement({
     actions: ['bedrock:Retrieve'],
-    resources: ['arn:aws:aoss:eu-west-1:471112926741:collection/595iilxjnd14z2wuttyi'], // Ensure this is your actual ARN
+    resources: ['arn:aws:bedrock:eu-west-1:471112926741:knowledge-base/BOTYIJFFS2'],
   })
 );
