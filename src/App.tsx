@@ -1,5 +1,5 @@
 import { AIConversation, createAIHooks } from '@aws-amplify/ui-react-ai';
-import { Authenticator, View, Heading } from '@aws-amplify/ui-react';
+import { Authenticator, View, Heading, Text } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { Schema } from '../amplify/data/resource';
 import '@aws-amplify/ui-react/styles.css';
@@ -20,24 +20,22 @@ export default function App() {
 
   return (
     <Authenticator hideSignUp={true}>
-      {({ signOut }) => (
+      {({ signOut, user }) => (
         <View padding="20px">
           <Heading level={1}>Internal Knowledge Base</Heading>
-          <button onClick={signOut} style={{ marginBottom: '10px' }}>Sign Out</button>
+          <View margin="10px 0">
+             <Text>Logged in as: {user?.loginId}</Text>
+             <button onClick={signOut}>Sign Out</button>
+          </View>
+          
           <AIConversation
-            messages={chatData || []} // Fix: Ensure it's always an array to prevent .filter error
+            messages={chatData || []} 
             isLoading={isLoading}
             handleSendMessage={handleSendMessage}
             allowAttachments={true}
             actions={[
-              {
-                label: '👍',
-                onClick: (msg) => handleFeedback(msg.id, true),
-              },
-              {
-                label: '👎',
-                onClick: (msg) => handleFeedback(msg.id, false),
-              }
+              { label: '👍', onClick: (msg) => handleFeedback(msg.id, true) },
+              { label: '👎', onClick: (msg) => handleFeedback(msg.id, false) }
             ]}
           />
         </View>
