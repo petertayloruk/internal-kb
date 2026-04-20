@@ -1,5 +1,5 @@
 import { AIConversation, createAIHooks } from '@aws-amplify/ui-react-ai';
-import { Authenticator, View, Heading, Text, Loader } from '@aws-amplify/ui-react';
+import { Authenticator, View, Heading, Text, Loader, Flex } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { Schema } from '../amplify/data/resource';
 import '@aws-amplify/ui-react/styles.css';
@@ -17,14 +17,16 @@ export default function App() {
     <Authenticator hideSignUp={true}>
       {({ signOut, user }) => (
         <View padding="20px">
-          <Heading level={1}>Internal Knowledge Base</Heading>
-          <View margin="10px 0" display="flex" justifyContent="space-between">
-             <Text>User: {user?.loginId}</Text>
-             <button onClick={signOut}>Sign Out</button>
-          </View>
+          <Flex justifyContent="space-between" alignItems="center" marginBottom="20px">
+            <Heading level={1}>Internal KB</Heading>
+            <Flex alignItems="center" gap="10px">
+              <Text fontSize="small">{user?.loginId}</Text>
+              <button onClick={signOut}>Sign Out</button>
+            </Flex>
+          </Flex>
           
-          {/* GUARD: Only load the chat if data is not null/undefined */}
-          {chatData ? (
+          {/* Strict Check: Only show AIConversation if chatData is an array */}
+          {Array.isArray(chatData) ? (
             <AIConversation
               messages={chatData} 
               isLoading={isLoading}
@@ -32,10 +34,10 @@ export default function App() {
               allowAttachments={true}
             />
           ) : (
-            <View textAlign="center" padding="50px">
+            <Flex direction="column" alignItems="center" padding="50px">
               <Loader size="large" />
-              <Text>Initializing AI Engine...</Text>
-            </View>
+              <Text marginTop="10px">Connecting to AI Engine...</Text>
+            </Flex>
           )}
         </View>
       )}

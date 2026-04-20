@@ -2,13 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { Amplify } from 'aws-amplify';
+
+// We fetch the configuration dynamically
 import outputs from '../amplify_outputs.json';
 
-// Defensive check: only configure if the file has data
-if (outputs && Object.keys(outputs).length > 0) {
+// Log to console so we can see what is happening in your browser
+console.log("Checking Amplify Configuration...", outputs);
+
+if (outputs && (outputs.auth || outputs.data)) {
   Amplify.configure(outputs);
 } else {
-  console.error("CRITICAL: amplify_outputs.json is missing or empty.");
+  console.error("CRITICAL ERROR: Configuration file is empty or missing data.");
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
