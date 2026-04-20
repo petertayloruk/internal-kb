@@ -9,10 +9,9 @@ const backend = defineBackend({
 });
 
 // 1. Add the Bedrock HTTP Data Source
-const dataStack = backend.data.resources.nestedStacks['data7552DF31'];
 backend.data.addHttpDataSource(
   'BedrockKB',
-  'https://bedrock-runtime.eu-west-1.amazonaws.com', // Change region if not eu-west-1
+  'https://bedrock-runtime.eu-west-1.amazonaws.com',
   {
     authorizationConfig: {
       signingRegion: 'eu-west-1',
@@ -21,10 +20,13 @@ backend.data.addHttpDataSource(
   }
 );
 
-// 2. Grant permission to the Backend to call your specific Knowledge Base
-backend.data.resources.cfnResources.cfnGraphqlApi.addToRolePolicy(
+// 2. Correctly grant permission to the Backend Role
+// We access the role from the generated L3 construct
+const backendRole = backend.data.resources.graphqlApi.apiRole;
+
+backendRole.addToPrincipalPolicy(
   new PolicyStatement({
     actions: ['bedrock:Retrieve'],
-    resources: ['arn:aws:aoss:eu-west-1:471112926741:collection/595iilxjnd14z2wuttyi'],
+    resources: ['arn:aws:aoss:eu-west-1:471112926741:collection/595iilxjnd14z2wuttyi'], // Ensure this is your actual ARN
   })
 );
