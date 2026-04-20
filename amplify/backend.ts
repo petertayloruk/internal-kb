@@ -8,7 +8,7 @@ const backend = defineBackend({
   data,
 });
 
-// 1. Add the Bedrock connection
+// 1. Add the Bedrock HTTP Data Source
 backend.data.addHttpDataSource(
   'BedrockKB',
   'https://bedrock-runtime.eu-west-1.amazonaws.com',
@@ -20,12 +20,14 @@ backend.data.addHttpDataSource(
   }
 );
 
-// 2. Grant permission using your exact Bedrock ARN
-const backendRole = backend.data.resources.graphqlApi.apiRole;
+// 2. defensive access to the principal to avoid 'undefined' error
+const dataStack = backend.data.resources.graphqlApi;
 
-backendRole.addToPrincipalPolicy(
-  new PolicyStatement({
-    actions: ['bedrock:Retrieve'],
-    resources: ['arn:aws:bedrock:eu-west-1:471112926741:knowledge-base/BOTYIJFFS2'],
-  })
-);
+if (dataStack.apiRole) {
+  dataStack.apiRole.addToPrincipalPolicy(
+    new PolicyStatement({
+      actions: ['bedrock:Retrieve'],
+      resources: ['arn:aws:bedrock:eu-west-1:471112926741:knowledge-base/BOTYIJFFS2'],
+    })
+  );
+}
