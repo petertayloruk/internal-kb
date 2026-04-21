@@ -1,5 +1,5 @@
 import { AIConversation, createAIHooks } from '@aws-amplify/ui-react-ai';
-import { Authenticator, View, Heading, Text, Loader, Flex } from '@aws-amplify/ui-react';
+import { Authenticator, View, Heading, Text, Flex } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { Schema } from '../amplify/data/resource';
 import '@aws-amplify/ui-react/styles.css';
@@ -25,20 +25,15 @@ export default function App() {
             </Flex>
           </Flex>
           
-          {/* Strict Check: Only show AIConversation if chatData is an array */}
-          {Array.isArray(chatData) ? (
-            <AIConversation
-              messages={chatData} 
-              isLoading={isLoading}
-              handleSendMessage={handleSendMessage}
-              allowAttachments={true}
-            />
-          ) : (
-            <Flex direction="column" alignItems="center" padding="50px">
-              <Loader size="large" />
-              <Text marginTop="10px">Connecting to AI Engine...</Text>
-            </Flex>
-          )}
+          {/* We show the conversation immediately now. 
+              If chatData is still null, we pass an empty array []. */}
+          <AIConversation
+            messages={chatData || []} 
+            isLoading={isLoading}
+            handleSendMessage={handleSendMessage}
+            allowAttachments={true}
+            welcomeMessage="Hello! How can I help you with the internal knowledge base today?"
+          />
         </View>
       )}
     </Authenticator>
