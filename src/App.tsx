@@ -1,5 +1,5 @@
 import { AIConversation, createAIHooks } from '@aws-amplify/ui-react-ai';
-import { Authenticator, View, Heading, Text, Flex } from '@aws-amplify/ui-react';
+import { Authenticator, View, Heading, Flex } from '@aws-amplify/ui-react';
 import { generateClient } from 'aws-amplify/api';
 import { Schema } from '../amplify/data/resource';
 import '@aws-amplify/ui-react/styles.css';
@@ -13,24 +13,24 @@ export default function App() {
     handleSendMessage
   ] = useAIConversation('chat');
 
+  // We force a fallback to an empty array so the UI never crashes
+  const safeMessages = chatData ? chatData : [];
+
   return (
     <Authenticator hideSignUp={true}>
-      {({ signOut, user }) => (
+      {({ signOut }) => (
         <View padding="20px">
-          <Flex justifyContent="space-between" alignItems="center" marginBottom="20px">
-            <Heading level={1}>Internal KB v2</Heading>
-            <Flex alignItems="center" gap="10px">
-              <Text fontSize="small">{user?.loginId}</Text>
-              <button onClick={signOut}>Sign Out</button>
-            </Flex>
+          <Flex justifyContent="space-between" marginBottom="20px">
+            <Heading level={1}>Internal KB</Heading>
+            <button onClick={signOut}>Sign Out</button>
           </Flex>
           
           <AIConversation
-            messages={chatData || []} 
+            messages={safeMessages} 
             isLoading={isLoading}
             handleSendMessage={handleSendMessage}
             allowAttachments={true}
-            welcomeMessage="System Ready. Ask me anything about the KB."
+            welcomeMessage="System Ready. How can I help?"
           />
         </View>
       )}
