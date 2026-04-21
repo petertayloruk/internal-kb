@@ -18,21 +18,19 @@ export default function App() {
       {({ signOut, user }) => (
         <View padding="20px">
           <Flex justifyContent="space-between" alignItems="center" marginBottom="20px">
-            <Heading level={1}>Internal KB</Heading>
+            <Heading level={1}>Internal KB v2</Heading>
             <Flex alignItems="center" gap="10px">
               <Text fontSize="small">{user?.loginId}</Text>
               <button onClick={signOut}>Sign Out</button>
             </Flex>
           </Flex>
           
-          {/* We show the conversation immediately now. 
-              If chatData is still null, we pass an empty array []. */}
           <AIConversation
             messages={chatData || []} 
             isLoading={isLoading}
             handleSendMessage={handleSendMessage}
             allowAttachments={true}
-            welcomeMessage="Hello! How can I help you with the internal knowledge base today?"
+            welcomeMessage="System Ready. Ask me anything about the KB."
           />
         </View>
       )}
